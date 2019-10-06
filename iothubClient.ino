@@ -34,7 +34,7 @@ static void sendCallback(IOTHUB_CLIENT_CONFIRMATION_RESULT result, void *userCon
     if (IOTHUB_CLIENT_CONFIRMATION_OK == result)
     {
         Serial.println("Message sent to Azure IoT Hub");
-        blinkLED();
+//        blinkLED();
     }
     else
     {
@@ -105,7 +105,7 @@ IOTHUBMESSAGE_DISPOSITION_RESULT receiveMessageCallback(IOTHUB_MESSAGE_HANDLE me
         temp[size] = '\0';
         Serial.printf("Receive C2D message: %s.\r\n", temp);
         free(temp);
-        blinkLED();
+//        blinkLED();
     }
     return IOTHUBMESSAGE_ACCEPTED;
 }
@@ -143,7 +143,7 @@ int deviceMethodCallback(
 
     return result;
 }
-
+/**
 void twinCallback(
     DEVICE_TWIN_UPDATE_STATE updateState,
     const unsigned char *payLoad,
@@ -159,3 +159,4 @@ void twinCallback(
     parseTwinMessage(temp);
     free(temp);
 }
+*/

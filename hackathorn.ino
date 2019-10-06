@@ -13,7 +13,10 @@
 #include <AzureIoTProtocol_MQTT.h>
 #include <AzureIoTUtility.h>
 
-#include "DHT.h"
+//#include "DHT.h"
+#include <Adafruit_Sensor.h>
+#include <DHT.h>
+#include <DHT_U.h>
 
 #define MESSAGE_MAX_LEN 256
 #define DHTPIN 2     // Digital pin connected to the DHT sensor
@@ -25,11 +28,11 @@
 #define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
 //#define DHTTYPE DHT21   // DHT 21 (AM2301)
 
-const char* connectionString = "";
-const char* ssid = "wwcode";
-const char* pass = "Hopper Lovelae Borg";
-const char *onSuccess = "\"Successfully invoke device method\"";
-const char *notFound = "\"No method found\"";
+const char* connectionString = "HostName=Composter.azure-devices.net;DeviceId=CompostDevice;SharedAccessKey=JxLqZ88y9i9S2LCOzeXFCJ0WOHFVhGe/z6wK505y6hg=";
+const char* ssid = "BrittanysPhone";
+const char* pass = "NeedMoreInterbits";
+// const char *onSuccess = "\"Successfully invoke device method\"";
+// const char *notFound = "No method found";
 
 // Feather HUZZAH ESP8266 note: use pins 3, 4, 5, 12, 13 or 14 --
 // Pin 15 can work but DHT must be disconnected during program upload.
@@ -39,8 +42,6 @@ const char *notFound = "\"No method found\"";
 // tweak the timings for faster processors.  This parameter is no longer needed
 // as the current DHT reading algorithm adjusts itself to work on faster procs.
 DHT dht(DHTPIN, DHTTYPE);
-
-static WiFiClientSecure sslClient; // for ESP8266
 
 static int interval = INTERVAL;
 static bool messagePending = false;
@@ -93,7 +94,7 @@ void setup() {
     IoTHubClient_LL_SetOption(iotHubClientHandle, "product_info", "HappyPath_AdafruitFeatherHuzzah-C");
     IoTHubClient_LL_SetMessageCallback(iotHubClientHandle, receiveMessageCallback, NULL);
     IoTHubClient_LL_SetDeviceMethodCallback(iotHubClientHandle, deviceMethodCallback, NULL);
-    IoTHubClient_LL_SetDeviceTwinCallback(iotHubClientHandle, twinCallback, NULL);
+//    IoTHubClient_LL_SetDeviceTwinCallback(iotHubClientHandle, twinCallback, NULL);
     Serial.println("done connection to iotHub");
 }
 
@@ -108,16 +109,16 @@ void loop() {
 //      float t = dht.readTemperature();
       // Read temperature as Fahrenheit (isFahrenheit = true)
       float f = dht.readTemperature(true);
-      temperatureAlert = (f > HIGH_TEMP);
+      bool temperatureAlert = (f > HIGH_TEMP);
       // Check if any reads failed and exit early (to try again).
-      if (isnan(h) || isnan(f)) {
+//      if (isnan(h) || isnan(f)) {
+      if (h == 0 || f == 0) {
           Serial.println(F("Failed to read from DHT sensor!"));
-      } els {
-        sprintf(messagePayload, "{'deviceId':%s,'temperature':%f,'humidity':%f}\n", DEVICE_ID, h, f);
+      } else {
+        sprintf(messagePayload, "{'deviceId':%s,'temperature':%d,'humidity':%d}\n", DEVICE_ID, (int)h, (int)f);
         Serial.print(messagePayload);
 
         sendMessage(iotHubClientHandle, messagePayload, temperatureAlert);
-        messageCount++;
         delay(interval);
       }
       IoTHubClient_LL_DoWork(iotHubClientHandle);
