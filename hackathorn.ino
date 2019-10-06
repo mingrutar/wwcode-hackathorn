@@ -29,10 +29,10 @@
 //#define DHTTYPE DHT21   // DHT 21 (AM2301)
 
 const char* connectionString = "HostName=Composter.azure-devices.net;DeviceId=CompostDevice;SharedAccessKey=JxLqZ88y9i9S2LCOzeXFCJ0WOHFVhGe/z6wK505y6hg=";
-const char* ssid = "BrittanysPhone";
-const char* pass = "NeedMoreInterbits";
-// const char *onSuccess = "\"Successfully invoke device method\"";
-// const char *notFound = "No method found";
+//const char* ssid = "BrittanysPhone";
+//const char* pass = "NeedMoreInterbits";
+const char* ssid = "WWCode";
+const char* pass = "Hopper Lovelace Borg";
 
 // Feather HUZZAH ESP8266 note: use pins 3, 4, 5, 12, 13 or 14 --
 // Pin 15 can work but DHT must be disconnected during program upload.
@@ -94,7 +94,7 @@ void setup() {
     IoTHubClient_LL_SetOption(iotHubClientHandle, "product_info", "HappyPath_AdafruitFeatherHuzzah-C");
     IoTHubClient_LL_SetMessageCallback(iotHubClientHandle, receiveMessageCallback, NULL);
     IoTHubClient_LL_SetDeviceMethodCallback(iotHubClientHandle, deviceMethodCallback, NULL);
-//    IoTHubClient_LL_SetDeviceTwinCallback(iotHubClientHandle, twinCallback, NULL);
+    IoTHubClient_LL_SetDeviceTwinCallback(iotHubClientHandle, twinCallback, NULL);
     Serial.println("done connection to iotHub");
 }
 

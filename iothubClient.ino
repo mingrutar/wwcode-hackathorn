@@ -53,7 +53,7 @@ static void sendMessage(IOTHUB_CLIENT_LL_HANDLE iotHubClientHandle, char *buffer
     else
     {
         MAP_HANDLE properties = IoTHubMessage_Properties(messageHandle);
-        Map_Add(properties, "temperatureAlert", temperatureAlert ? "true" : "false");
+//        Map_Add(properties, "temperatureAlert", temperatureAlert ? "true" : "false");
         Serial.printf("Sending message: %s.\r\n", buffer);
         if (IoTHubClient_LL_SendEventAsync(iotHubClientHandle, messageHandle, sendCallback, NULL) != IOTHUB_CLIENT_OK)
         {
@@ -143,7 +143,6 @@ int deviceMethodCallback(
 
     return result;
 }
-/**
 void twinCallback(
     DEVICE_TWIN_UPDATE_STATE updateState,
     const unsigned char *payLoad,
@@ -156,7 +155,8 @@ void twinCallback(
         temp[i] = (char)(payLoad[i]);
     }
     temp[size] = '\0';
-    parseTwinMessage(temp);
+    Serial.print("twinCallback received ");
+    Serial.println(temp);
+//    parseTwinMessage(temp);
     free(temp);
 }
-*/
